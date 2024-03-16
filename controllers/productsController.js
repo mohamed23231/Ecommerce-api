@@ -170,3 +170,35 @@ exports.aliasTopProduct = (req,res,next)=>{
   next()
 
 }
+
+exports.productStats = async (req, res) => {
+  try {
+    const stats = await Product.aggregate([
+      { $match: { price: { $gte: 1000 } } },
+      {
+        $group: {
+          _id: null,
+          numOfProduct: { $sum: 1 },
+          avgPrice: { $avg: '$price' },
+          maxPrice: { $max: '$price' },
+          minPrice: { $min: '$price' },
+        }
+      }
+    ]);
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        status: "Success",
+        stats
+      },
+    });
+
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      message: "couldn't find products",
+      error,
+    });
+  }
+};
