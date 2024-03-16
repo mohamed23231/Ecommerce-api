@@ -3,12 +3,15 @@ const router = express.Router();
 const productController = require("./../controllers/productsController");
 
 router
-  .route("/")
+  .route("/products")
   .get(productController.getAllProduct)
   .post(productController.postProduct);
 
 router
-  .route("/:id")
+  .route("/product/favourite")
+  .get(productController.aliasTopProduct,productController.getAllProduct)
+router
+  .route("/product/:productId")
   .get(productController.getOneProduct)
   .patch(productController.editeProduct)
   .delete(productController.deleteProduct);
